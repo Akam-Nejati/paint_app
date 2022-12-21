@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { color } from "../../../stores/colorAndSize";
+import { size } from "../../../stores/colorAndSize";
 
 interface coordinates {
   x: number;
@@ -13,12 +14,22 @@ const default_coordinates: coordinates = {
 const drawing = ref(false);
 const first_coordinates = ref(default_coordinates);
 const last_coordinates = ref(default_coordinates);
-const prev_coordinates = ref(default_coordinates);
+const prev_first_coordinates = ref(default_coordinates);
+const prev_last_coordinates = ref(default_coordinates);
 
-export function buildSquare(cover: any, ctx: any, ctxc: any) {
-  function draw_square(context: any, first: coordinates, last: coordinates) {
-    context.fillStyle = color.value;
-    context.fillRect(first.x, first.y, last.x - first.x, last.y - first.y);
+export function buildCircle(cover: any, ctx: any, ctxc: any) {
+  function draw_circle(context: any, first: coordinates, last: coordinates) {
+    context.strokeStyle = color.value
+    context.lineWidth = size.value;
+    context.beginPath();
+    context.arc(
+      first.x,
+      first.y,
+      Math.abs(first.x - last.x),
+      0,
+      2 * Math.PI
+    );
+    context.stroke();
   }
 
   function mousedown(event: MouseEvent) {
@@ -28,38 +39,39 @@ export function buildSquare(cover: any, ctx: any, ctxc: any) {
       x: event.offsetX,
       y: event.offsetY,
     };
+
+    prev_first_coordinates.value = first_coordinates.value
   }
 
   function mousemove(event: MouseEvent) {
     if (!drawing.value) {
       return;
     }
-    ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
+
     last_coordinates.value = {
       x: event.offsetX,
       y: event.offsetY,
     };
 
-    prev_coordinates.value = {
-      x: first_coordinates.value.x,
-      y: first_coordinates.value.y,
-    };
+    prev_last_coordinates.value = last_coordinates.value
 
-    draw_square(ctx.value, first_coordinates.value, last_coordinates.value);
+    ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
+
+    draw_circle(ctx.value, first_coordinates.value, last_coordinates.value)
   }
-
+  
   function mouseup() {
     drawing.value = false;
-
-    draw_square(ctxc.value, prev_coordinates.value, last_coordinates.value);
     ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
-  }
 
+    draw_circle(ctxc.value, prev_first_coordinates.value, prev_last_coordinates.value)
+  }
+  
   function mouseleave() {
     drawing.value = false;
-
     ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
-    draw_square(ctxc.value, prev_coordinates.value, last_coordinates.value);
+
+    draw_circle(ctxc.value, prev_first_coordinates.value, prev_last_coordinates.value)
   }
 
   return {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { seleted_tool } from "../../stores/ItemsDashboard";
-import { color } from "../../stores/colorSelector";
+import { color } from "../../stores/colorAndSize";
 function change_color(event: any) {
   color.value = event.target.value;
 }

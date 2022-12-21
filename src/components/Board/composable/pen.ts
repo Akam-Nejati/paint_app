@@ -1,82 +1,36 @@
-import { ref } from "vue";
-import { color } from "../../../stores/colorSelector";
+import { ref } from "vue"
+import { color } from "../../../stores/colorAndSize";
+import { size } from "../../../stores/colorAndSize";
 
-interface coordinates {
-  x: number;
-  y: number;
-}
-
-const default_coordinates: coordinates = {
-  x: 0,
-  y: 0,
-};
-const first_coordinates = ref(default_coordinates);
-const last_coordinates = ref(default_coordinates);
-const prev_first_coordinates = ref(default_coordinates);
-const prev_last_coordinates = ref(default_coordinates);
 const drawing = ref(false);
 
-export function pen(cover: any, ctx: any, ctxc: any) {
-  function draw_line(context: any, first: coordinates, last: coordinates) {
-    context.beginPath();
-    context.strokeStyle = color.value;
-    context.moveTo(first.x, first.y);
-    context.lineTo(last.x, last.y);
-    context.stroke();
-  }
-
+export function pen(ctxc: any) {
+  ctxc.value.lineCap = "rounded"
+  ctxc.value.strokeStyle = color.value
+  ctxc.lineWidth = size.value;
+  
   function mousedown(event: MouseEvent) {
     drawing.value = true;
-    first_coordinates.value = {
-      x: event.offsetX,
-      y: event.offsetY,
-    };
-
-    prev_first_coordinates.value = {
-      x: event.offsetX,
-      y: event.offsetY,
-    };
+    ctxc.value.beginPath()
   }
-
+  
   function mousemove(event: MouseEvent) {
     if (!drawing.value) {
       return;
     }
-
-    last_coordinates.value = {
-      x: event.offsetX,
-      y: event.offsetY,
-    };
-
-    prev_last_coordinates.value = {
-      x: event.offsetX,
-      y: event.offsetY,
-    };
-
-    ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
-    draw_line(ctx.value, first_coordinates.value, last_coordinates.value);
+    
+    ctxc.value.lineTo(event.offsetX, event.offsetY)
+    ctxc.value.stroke()
+    ctxc.value.beginPath()
+    ctxc.value.moveTo(event.offsetX, event.offsetY)
   }
-
+  
   function mouseup() {
     drawing.value = false;
-    ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
-
-    draw_line(
-      ctxc.value,
-      prev_first_coordinates.value,
-      prev_last_coordinates.value
-    );
   }
 
   function mouseleave() {
-    ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
     drawing.value = false;
-
-    draw_line(
-      ctxc.value,
-      prev_first_coordinates.value,
-      prev_last_coordinates.value
-    );
   }
 
   return {

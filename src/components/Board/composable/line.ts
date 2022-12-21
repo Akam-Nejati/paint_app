@@ -1,5 +1,6 @@
 import { ref } from "vue";
-import { color } from "../../../stores/colorSelector";
+import { color } from "../../../stores/colorAndSize";
+import { size } from "../../../stores/colorAndSize";
 
 interface coordinates {
   x: number;
@@ -18,8 +19,9 @@ const drawing = ref(false);
 
 export function buildLine(cover: any, ctx: any, ctxc: any) {
   function draw_line(context: any, first: coordinates, last: coordinates) {
-    context.beginPath();
     context.strokeStyle = color.value;
+    context.lineWidth = size.value;
+    context.beginPath();
     context.moveTo(first.x, first.y);
     context.lineTo(last.x, last.y);
     context.stroke();
@@ -36,6 +38,8 @@ export function buildLine(cover: any, ctx: any, ctxc: any) {
       x: event.offsetX,
       y: event.offsetY,
     };
+
+    prev_last_coordinates.value = first_coordinates.value;
   }
 
   function mousemove(event: MouseEvent) {
@@ -61,14 +65,22 @@ export function buildLine(cover: any, ctx: any, ctxc: any) {
     drawing.value = false;
     ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
 
-    draw_line(ctxc.value, prev_first_coordinates.value, prev_last_coordinates.value);
+    draw_line(
+      ctxc.value,
+      prev_first_coordinates.value,
+      prev_last_coordinates.value
+    );
   }
 
   function mouseleave() {
     drawing.value = false;
     ctx.value.clearRect(0, 0, cover.value.width, cover.value.height);
 
-    draw_line(ctxc.value, prev_first_coordinates.value, prev_last_coordinates.value);
+    draw_line(
+      ctxc.value,
+      prev_first_coordinates.value,
+      prev_last_coordinates.value
+    );
   }
 
   return {

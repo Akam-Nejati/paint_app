@@ -3,11 +3,14 @@ import { ref, onMounted } from "vue";
 import {
   detectTool
 } from "../../stores/ItemsDashboard";
+import { color } from "../../stores/colorAndSize";
 
 const canvas = ref<any>();
 const cover = ref<any>();
 const ctx = ref<any>();
 const ctxc = ref<any>();
+
+
 
 onMounted(() => {
   ctx.value = cover.value.getContext("2d");
