@@ -1,6 +1,5 @@
 import { ref } from "vue";
-import { color } from "../../../stores/colorAndSize";
-import { size } from "../../../stores/colorAndSize";
+import { color } from "../../../stores/tools";
 
 interface coordinates {
   x: number;
@@ -20,7 +19,6 @@ const drawing = ref(false);
 export function buildLine(cover: any, ctx: any, ctxc: any) {
   function draw_line(context: any, first: coordinates, last: coordinates) {
     context.strokeStyle = color.value;
-    context.lineWidth = size.value;
     context.beginPath();
     context.moveTo(first.x, first.y);
     context.lineTo(last.x, last.y);

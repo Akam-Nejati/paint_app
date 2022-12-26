@@ -1,6 +1,5 @@
 import { ref } from "vue";
-import { color } from "../../../stores/colorAndSize";
-
+import { color, stroke_or_fill } from "../../../stores/tools";
 interface coordinates {
   x: number;
   y: number;
@@ -17,8 +16,13 @@ const prev_coordinates = ref(default_coordinates);
 
 export function buildSquare(cover: any, ctx: any, ctxc: any) {
   function draw_square(context: any, first: coordinates, last: coordinates) {
-    context.fillStyle = color.value;
-    context.fillRect(first.x, first.y, last.x - first.x, last.y - first.y);
+    if (stroke_or_fill.value === "fill") {
+      context.fillStyle = color.value;
+      context.fillRect(first.x, first.y, last.x - first.x, last.y - first.y);
+    } else {
+      context.strokeStyle = color.value;
+      context.strokeRect(first.x, first.y, last.x - first.x, last.y - first.y);
+    }
   }
 
   function mousedown(event: MouseEvent) {
