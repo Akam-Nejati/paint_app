@@ -1,1 +1,1 @@
-<h3 style="color: red"> live demo </h3>
+<h3 style="color:red;"> live demo </h3>
