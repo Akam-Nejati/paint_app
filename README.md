@@ -1,6 +1,8 @@
-<h3> Live demo </h3>
+# Live demo
+- [preview](http://paint.gigfa.com)
 
-<a href="http://paint.gigfa.com">live demo</a>
-<hr />
 
-<h3> Commands </h3>
+# Install and use
+npm i
+npm run dev
+npm build
