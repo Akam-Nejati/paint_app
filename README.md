@@ -5,7 +5,7 @@ a simple and small paint app
 vue, tailwind, typescript
 
 # Live demo
-- [preview]([http://paint.gigfa.com](https://simple-paint-app.onrender.com/))
+<a href="https://simple-paint-app.onrender.com/">preview</a>
 
 # Install and use
 ```
